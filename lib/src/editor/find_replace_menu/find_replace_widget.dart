@@ -61,107 +61,110 @@ class _FindMenuWidgetState extends State<FindMenuWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: () => setState(
-                () => replaceFlag = !replaceFlag,
+    return SizedBox(
+      height: replaceFlag ? 90 : 45,
+      width: 360,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                onPressed: () => setState(
+                  () => replaceFlag = !replaceFlag,
+                ),
+                icon: replaceFlag ? const Icon(Icons.expand_less) : const Icon(Icons.expand_more),
               ),
-              icon: replaceFlag
-                  ? const Icon(Icons.expand_less)
-                  : const Icon(Icons.expand_more),
-            ),
-            SizedBox(
-              width: 200,
-              height: 30,
-              child: TextField(
-                key: const Key('findTextField'),
-                focusNode: focusNode,
-                controller: findController,
-                onSubmitted: (_) {
-                  searchService.navigateToMatch();
+              SizedBox(
+                width: 200,
+                height: 30,
+                child: TextField(
+                  key: const Key('findTextField'),
+                  focusNode: focusNode,
+                  controller: findController,
+                  onSubmitted: (_) {
+                    searchService.navigateToMatch();
 
-                  // Workaround for editor forcing focus
-                  Future.delayed(const Duration(milliseconds: 50)).then(
-                    (value) => FocusScope.of(context).requestFocus(focusNode),
+                    // Workaround for editor forcing focus
+                    Future.delayed(const Duration(milliseconds: 50)).then(
+                      (value) => FocusScope.of(context).requestFocus(focusNode),
+                    );
+                  },
+                  decoration: _buildInputDecoration(widget.localizations.find),
+                ),
+              ),
+              IconButton(
+                key: const Key('previousMatchButton'),
+                iconSize: _iconSize,
+                onPressed: () => searchService.navigateToMatch(moveUp: true),
+                icon: const Icon(Icons.arrow_upward),
+                tooltip: widget.localizations.previousMatch,
+              ),
+              IconButton(
+                key: const Key('nextMatchButton'),
+                iconSize: _iconSize,
+                onPressed: () => searchService.navigateToMatch(),
+                icon: const Icon(Icons.arrow_downward),
+                tooltip: widget.localizations.nextMatch,
+              ),
+              IconButton(
+                key: const Key('closeButton'),
+                iconSize: _iconSize,
+                onPressed: () {
+                  widget.dismiss();
+                  searchService.findAndHighlight(
+                    queriedPattern,
+                    unhighlight: true,
                   );
+                  queriedPattern = '';
                 },
-                decoration: _buildInputDecoration(widget.localizations.find),
+                icon: const Icon(Icons.close),
+                tooltip: widget.localizations.close,
               ),
-            ),
-            IconButton(
-              key: const Key('previousMatchButton'),
-              iconSize: _iconSize,
-              onPressed: () => searchService.navigateToMatch(moveUp: true),
-              icon: const Icon(Icons.arrow_upward),
-              tooltip: widget.localizations.previousMatch,
-            ),
-            IconButton(
-              key: const Key('nextMatchButton'),
-              iconSize: _iconSize,
-              onPressed: () => searchService.navigateToMatch(),
-              icon: const Icon(Icons.arrow_downward),
-              tooltip: widget.localizations.nextMatch,
-            ),
-            IconButton(
-              key: const Key('closeButton'),
-              iconSize: _iconSize,
-              onPressed: () {
-                widget.dismiss();
-                searchService.findAndHighlight(
-                  queriedPattern,
-                  unhighlight: true,
-                );
-                queriedPattern = '';
-              },
-              icon: const Icon(Icons.close),
-              tooltip: widget.localizations.close,
-            ),
-          ],
-        ),
-        replaceFlag
-            ? Row(
-                children: [
-                  SizedBox(
-                    width: 200,
-                    height: 30,
-                    child: TextField(
-                      key: const Key('replaceTextField'),
-                      focusNode: replaceFocusNode,
-                      autofocus: false,
-                      controller: replaceController,
-                      onSubmitted: (_) {
-                        _replaceSelectedWord();
-
-                        Future.delayed(const Duration(milliseconds: 50)).then(
-                          (value) => FocusScope.of(context)
-                              .requestFocus(replaceFocusNode),
-                        );
-                      },
-                      decoration:
-                          _buildInputDecoration(widget.localizations.replace),
+            ],
+          ),
+          replaceFlag
+              ? Row(
+                  children: [
+                    const SizedBox(
+                      width: 40,
                     ),
-                  ),
-                  IconButton(
-                    key: const Key('replaceSelectedButton'),
-                    onPressed: () => _replaceSelectedWord(),
-                    icon: const Icon(Icons.find_replace),
-                    iconSize: _iconSize,
-                    tooltip: widget.localizations.replace,
-                  ),
-                  IconButton(
-                    key: const Key('replaceAllButton'),
-                    onPressed: () => _replaceAllMatches(),
-                    icon: const Icon(Icons.change_circle_outlined),
-                    iconSize: _iconSize,
-                    tooltip: widget.localizations.replaceAll,
-                  ),
-                ],
-              )
-            : const SizedBox.shrink(),
-      ],
+                    SizedBox(
+                      width: 200,
+                      height: 30,
+                      child: TextField(
+                        key: const Key('replaceTextField'),
+                        focusNode: replaceFocusNode,
+                        autofocus: false,
+                        controller: replaceController,
+                        onSubmitted: (_) {
+                          _replaceSelectedWord();
+
+                          Future.delayed(const Duration(milliseconds: 50)).then(
+                            (value) => FocusScope.of(context).requestFocus(replaceFocusNode),
+                          );
+                        },
+                        decoration: _buildInputDecoration(widget.localizations.replace),
+                      ),
+                    ),
+                    IconButton(
+                      key: const Key('replaceSelectedButton'),
+                      onPressed: () => _replaceSelectedWord(),
+                      icon: const Icon(Icons.find_replace),
+                      iconSize: _iconSize,
+                      tooltip: widget.localizations.replace,
+                    ),
+                    IconButton(
+                      key: const Key('replaceAllButton'),
+                      onPressed: () => _replaceAllMatches(),
+                      icon: const Icon(Icons.change_circle_outlined),
+                      iconSize: _iconSize,
+                      tooltip: widget.localizations.replaceAll,
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ],
+      ),
     );
   }
 

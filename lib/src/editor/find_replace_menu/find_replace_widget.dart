@@ -62,8 +62,8 @@ class _FindMenuWidgetState extends State<FindMenuWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: replaceFlag ? 90 : 45,
-      width: 360,
+      height: replaceFlag ? 96 : 48,
+      width: 392,
       child: Column(
         children: [
           Row(

@@ -72,7 +72,9 @@ class _FindMenuWidgetState extends State<FindMenuWidget> {
                 onPressed: () => setState(
                   () => replaceFlag = !replaceFlag,
                 ),
-                icon: replaceFlag ? const Icon(Icons.expand_less) : const Icon(Icons.expand_more),
+                icon: replaceFlag
+                    ? const Icon(Icons.expand_less)
+                    : const Icon(Icons.expand_more),
               ),
               SizedBox(
                 width: 200,
@@ -140,10 +142,12 @@ class _FindMenuWidgetState extends State<FindMenuWidget> {
                           _replaceSelectedWord();
 
                           Future.delayed(const Duration(milliseconds: 50)).then(
-                            (value) => FocusScope.of(context).requestFocus(replaceFocusNode),
+                            (value) => FocusScope.of(context)
+                                .requestFocus(replaceFocusNode),
                           );
                         },
-                        decoration: _buildInputDecoration(widget.localizations.replace),
+                        decoration:
+                            _buildInputDecoration(widget.localizations.replace),
                       ),
                     ),
                     IconButton(
